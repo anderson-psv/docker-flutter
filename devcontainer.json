@@ -1,0 +1,15 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.238.0/containers/docker-existing-docker-compose
+// If you want to run as a non-root user in the container, see .devcontainer/docker-compose.yml.
+{
+	"name": "flutter_docker",
+	"context": "..",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "flutter_docker",
+	"settings": {
+		"terminal.integrated.shell.linux": null
+	},
+    "extensions": ["dart-code.flutter"],
+	"workspaceMount": "source=${localWorkspaceFolder}/workspace,target=/home/developer/workspace,type=bind,consistency=delegated",
+    "workspaceFolder": "/home/developer/workspace"
+}
