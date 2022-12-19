@@ -1,20 +1,10 @@
-version: '3'
-
+version: '3.8'
 services:
-  flutter_docker:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    tty: true
-    image: flutter_docker_img
-    container_name: flutter_docker_container
+  flutter:
+    build: .
+    container_name: docker-flutter
     privileged: true
     volumes:
-      - ../workspace:/home/developer/workspace
-    networks:
-      - flutter_docker_network
-
-networks:
-  flutter_docker_network:
-    driver: host
-
+      - ./workspace:/home/developer/workspace
+      - /dev/bus/usb:/dev/bus/usb # Use only in linux distros
+    command: tail -f /dev/null

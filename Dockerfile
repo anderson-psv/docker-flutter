@@ -1,19 +1,26 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
-RUN apt update && apt install -y sudo nano snapd wget language-pack-en-base
+# Prerequisites
+RUN apt update \
+    && DEBIAN_FRONTEND=noninteractive TZ=America/Sao_Paulo apt install -y \
+        curl \
+        git \
+        unzip \
+        xz-utils \
+        zip \
+        libglu1-mesa \
+        wget \
+        cmake \
+        clang \
+        ninja-build \
+        pkg-config \
+        libgtk-3-dev
 
-RUN apt install -y openjdk-8-jdk
+RUN DEBIAN_FRONTEND=noninteractive apt install -y openjdk-8-jdk 
 
-RUN snap install flutter --classic -y
-
-RUN apt install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
-
-# Set up new user 
-# Add developer to sudoers
+# Set up new user
 RUN useradd -ms /bin/bash developer
-RUN echo "developer ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-USER developer
+USER root
 WORKDIR /home/developer
 
 # Prepare Android directories and system variables
@@ -26,12 +33,8 @@ RUN wget -O sdk-tools.zip https://dl.google.com/android/repository/sdk-tools-lin
 RUN unzip sdk-tools.zip && rm sdk-tools.zip
 RUN mv tools Android/sdk/tools
 RUN cd Android/sdk/tools/bin && yes | ./sdkmanager --licenses
-RUN cd Android/sdk/tools/bin && ./sdkmanager \ 
-    "build-tools;29.0.2" \
-    "patcher;v4" \
-    "platform-tools" \
-    "platforms;android-29" \
-    "sources;android-29"
+RUN cd Android/sdk/tools/bin && ./sdkmanager "build-tools;29.0.2" "patcher;v4" "platform-tools" "platforms;android-29" "sources;android-29" "cmdline-tools;latest"
+ENV PATH "$PATH:/home/developer/Android/sdk/platform-tools"
 
 # Download Flutter SDK
 RUN git clone https://github.com/flutter/flutter.git
@@ -39,3 +42,5 @@ ENV PATH "$PATH:/home/developer/flutter/bin"
 
 # Run basic check to download Dark SDK
 RUN flutter doctor
+
+WORKDIR /home/developer/workspace
