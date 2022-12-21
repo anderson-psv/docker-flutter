@@ -16,11 +16,13 @@ RUN apt update \
         pkg-config \
         libgtk-3-dev
 
-RUN DEBIAN_FRONTEND=noninteractive apt install -y openjdk-8-jdk 
+RUN apt install -y nginx
+
+RUN DEBIAN_FRONTEND=noninteractive apt install -y openjdk-8-jdk
 
 # Set up new user
 RUN useradd -ms /bin/bash developer
-USER root
+USER developer
 WORKDIR /home/developer
 
 # Prepare Android directories and system variables
@@ -43,4 +45,19 @@ ENV PATH "$PATH:/home/developer/flutter/bin"
 # Run basic check to download Dark SDK
 RUN flutter doctor
 
-WORKDIR /home/developer/workspace
+# Enable flutter web
+RUN flutter channel master
+RUN flutter upgrade
+RUN flutter config --enable-web
+RUN flutter packages pub global activate webdev
+
+USER root
+
+# Install jdk after because of skdmanager error if before
+RUN apt install -y openjdk-11-jdk
+
+WORKDIR /var/www/html
+
+EXPOSE 80
+
+CMD nignx -g "daemon off;"

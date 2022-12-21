@@ -5,6 +5,8 @@ services:
     container_name: docker-flutter
     privileged: true
     volumes:
-      - ./workspace:/home/developer/workspace
+      - ./workspace:/var/www/html
       - /dev/bus/usb:/dev/bus/usb # Use only in linux distros
+    ports:
+      - 8087:80
     command: tail -f /dev/null
