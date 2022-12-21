@@ -1,0 +1,12 @@
+{
+    "name": "flutter_docker22",
+    "context": "..",
+	"dockerFile": "../Dockerfile",
+    "extensions": [
+		"alexisvt.flutter-snippets",
+		"Dart-Code.dart-code"
+	],
+	"workspaceMount": "source=${localWorkspaceFolder}/workspace,target=/var/www/html,type=bind,consistency=delegated",
+    "workspaceFolder": "/var/www/html",
+    "remoteUser": "root"
+}
